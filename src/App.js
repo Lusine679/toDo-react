@@ -1,25 +1,64 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import ToDoList from './components/ToDoList';
+import ToDoForm from "./components/ToDoForm";
+import ToDoFooter from "./components/ToDoFooter";
+
 
 function App() {
-  return (
+  const [todos, setTodos] = useState([
+    {
+      id : Math.random(),
+      text : "Learn Js",
+      isCompleted : false,
+    },
+    {
+      id : Math.random(),
+      text : "Learn CSS",
+      isCompleted : false,
+    },
+    {
+      id : Math.random(),
+      text : "Learn React",
+      isCompleted : false,
+    },
+  ]);
+   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ToDoForm onAdd={(text) => {
+        setTodos([
+          ...todos,
+          {
+            id : Math.random(),
+            text : text,
+            isCompleted : false,
+          }
+        ]);
+      }}/>
+      <ToDoList 
+        todos={todos}
+        onDelete={(todo) => {
+          setTodos(todos.filter((t) => t.id !== todo.id)) 
+        }}
+
+        onChange={(newTodo) => {
+          setTodos(todos.map((todo) => {
+            if(todo.id === newTodo.id){
+              return newTodo;
+            }
+
+            return todo;
+          }))
+        }}
+      />
+      <ToDoFooter todos={todos} onClearCompleted={() => {
+         setTodos(todos.filter((todo) => !todo.isCompleted ));
+      }}/>
     </div>
-  );
+   );
 }
+
+
+
 
 export default App;
